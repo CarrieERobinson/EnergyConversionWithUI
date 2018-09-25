@@ -5,17 +5,29 @@
  */
 package econvertergui;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author Carrie
  */
-public class EConverterGUI {
+public class EConverterGUI{
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Display display = new Display();
+        display.setVisible(true);
     }
     
+    
+    
 }
+//Energy units:
+    //Watts
+    //Joules
+    //Calorie
+    //Erg
+    //Btu
+    //Horsepower
