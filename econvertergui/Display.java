@@ -72,10 +72,10 @@ public class Display extends JFrame{
         panel.add(btuLabel);
         panel.add(btuField);
         
-        
-        
+        //Create tab for panel
         tp.addTab("Energy", panel);
         
+        //add the tabbed pane to the JFrame
         add(tp);
         
     }
