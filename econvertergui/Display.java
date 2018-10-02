@@ -31,8 +31,6 @@ public class Display extends JFrame implements ActionListener{
     
     //arrayList to hold the textfields
     ArrayList<JTextField> fieldArray = new ArrayList();
-    //arrayList to hold the labels
-    ArrayList<JLabel> labelArray = new ArrayList();
 
     public void runGUI()
     {
@@ -106,15 +104,7 @@ public class Display extends JFrame implements ActionListener{
         //set initial values in boxes
         initialValues();
     }
-    
-    public void keyPressed(ActionEvent event)
-    {
-        int row = fieldArray.indexOf(event.getSource());
-        String entry = fieldArray.get(row).getText();
-        
-        calculateConv(entry, row);
-    }
-    
+
     public void calculateConv(String entry, int row)
     {
         //update each text box in order to show conversions as user types
