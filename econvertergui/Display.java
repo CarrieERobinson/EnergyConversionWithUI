@@ -8,8 +8,6 @@ package econvertergui;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -22,7 +20,7 @@ import javax.swing.JTextField;
  *
  * @author Carrie
  */
-public class Display extends JFrame implements KeyListener{
+public class Display extends JFrame implements ActionListener{
     
     
     public Display()
@@ -69,7 +67,7 @@ public class Display extends JFrame implements KeyListener{
         //Add action listeners to each field
         for(int i = 0; i < fieldArray.size(); i++)
         {
-            fieldArray.get(i).addKeyListener(this);
+            fieldArray.get(i).addActionListener(this);
         }
         
         //Labels for each text field
@@ -105,6 +103,14 @@ public class Display extends JFrame implements KeyListener{
         //add the tabbed pane to the JFrame
         add(tp);
         
+    }
+    
+    public void keyPressed(ActionEvent event)
+    {
+        int row = fieldArray.indexOf(event.getSource());
+        String entry = fieldArray.get(row).getText();
+        
+        calculateConv(entry, row);
     }
     
     public void calculateConv(String entry, int row)
@@ -180,28 +186,9 @@ public class Display extends JFrame implements KeyListener{
         
     }
 
-    
-
     @Override
-    public void keyTyped(KeyEvent ke) {
-        int row = fieldArray.indexOf(ke.getSource());
-        String entry = fieldArray.get(row).getText();
-        
-        calculateConv(entry, row);
-    }
-
-    @Override
-    public void keyPressed(KeyEvent ke) 
-    {
-        int row = fieldArray.indexOf(ke.getSource());
-        String entry = fieldArray.get(row).getText();
-        
-        calculateConv(entry, row);    
-    }
-
-    @Override
-    public void keyReleased(KeyEvent ke) {
-        int row = fieldArray.indexOf(ke.getSource());
+    public void actionPerformed(ActionEvent ae) {
+        int row = fieldArray.indexOf(ae.getSource());
         String entry = fieldArray.get(row).getText();
         
         calculateConv(entry, row);
