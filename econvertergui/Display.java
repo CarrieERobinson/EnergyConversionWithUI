@@ -71,12 +71,12 @@ public class Display extends JFrame implements ActionListener{
         }
         
         //Labels for each text field
-        JLabel wattLabel = new JLabel("Watts: ");
-        JLabel jouleLabel = new JLabel("Joules/s: ");
-        JLabel calorieLabel = new JLabel("Calorie/s: ");
-        JLabel kCalLabel = new JLabel("kCals/s: ");
-        JLabel hpLabel = new JLabel("Horsepower: ");
-        JLabel btuLabel = new JLabel("BTU/hr: ");
+        JLabel wattLabel = new JLabel("Wattsecond: ");
+        JLabel jouleLabel = new JLabel("Joules: ");
+        JLabel calorieLabel = new JLabel("Gram Calories: ");
+        JLabel kCalLabel = new JLabel("kCalories: ");
+        JLabel hpLabel = new JLabel("Horsepower Hour: ");
+        JLabel btuLabel = new JLabel("BTU: ");
         
         //created grid layout to allign labels and text boxes
         GridLayout grid = new GridLayout(6, 2);
@@ -130,8 +130,8 @@ public class Display extends JFrame implements ActionListener{
             {
                 case 0:
                 {
-                    value = value * 0.29307107;
-                    //btu to watts
+                    value = value * 1055.06;
+                    //btu to wattseconds
                     fieldArray.get(row).setText(String.valueOf(value));
                     row++;
                     break;
@@ -146,7 +146,7 @@ public class Display extends JFrame implements ActionListener{
                 }
                 case 2:
                 {
-                    value = value * 0.2388;
+                    value = value * 0.2389;
                     //joules to calories
                     fieldArray.get(row).setText(String.valueOf(value));
                     row++;
@@ -162,7 +162,7 @@ public class Display extends JFrame implements ActionListener{
                 }
                 case 4:
                 {
-                    value = value * 5.61083642;
+                    value = value * 0.0015596;
                     //kCal to horsepower
                     fieldArray.get(row).setText(String.valueOf(value));
                     row++;
@@ -170,7 +170,7 @@ public class Display extends JFrame implements ActionListener{
                 }
                 case 5:
                 {
-                    value = value * 0.00039;
+                    value = value * 2544.43;
                     //horsepower to btu
                     fieldArray.get(row).setText(String.valueOf(value));
                     row = 0; //wrap back around to 0
