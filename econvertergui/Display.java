@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -22,13 +23,11 @@ import javax.swing.JTextField;
  */
 public class Display extends JFrame implements ActionListener{
     
-    
+    //runs my display code
     public Display()
     {
         runGUI();
     }
-    
-    //instantiate an actionListener
     
     //arrayList to hold the textfields
     ArrayList<JTextField> fieldArray = new ArrayList();
@@ -40,14 +39,13 @@ public class Display extends JFrame implements ActionListener{
         setTitle("Energy Converter");
         setSize(600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-    
+        //set window to center of screen
+        setLocationRelativeTo(null);
+        
         //tabbed pane which will contain panel with textfields
         JTabbedPane tp = new JTabbedPane();
         //panel to contain text fields
         JComponent panel = new JPanel();
-        
-        
-        
         
         //Text fields:
         //creates text fields, adds a listener, adds field to fieldArray
@@ -103,6 +101,10 @@ public class Display extends JFrame implements ActionListener{
         //add the tabbed pane to the JFrame
         add(tp);
         
+        //display instructions
+        displayError("Please enter a value into a box then press enter!");
+        //set initial values in boxes
+        initialValues();
     }
     
     public void keyPressed(ActionEvent event)
@@ -119,79 +121,107 @@ public class Display extends JFrame implements ActionListener{
         //explanation under class
         int stop = row;
         
+        
         //will keep track of what row the loop is on
-        row+=1;
+        if(row >= 5) 
+            row = 0;
+        else 
+            row+=1;
         
-        //will hold the value of previous equation
-        double value = Double.parseDouble(entry);
-        do
-        {
-            switch(row)
+        //wrap in try-catch to catch any invalid input and make a dialog
+        try{
+            //will hold the value of previous equation
+            double value = Double.parseDouble(entry);  
+        
+            do
             {
-                case 0:
+                switch(row)
                 {
-                    value = value * 1055.06;
-                    //btu to wattseconds
-                    fieldArray.get(row).setText(String.valueOf(value));
-                    row++;
-                    break;
+                    case 0:
+                    {
+                        value = value * 1055.06;
+                        //btu to wattseconds
+                        fieldArray.get(row).setText(String.valueOf(value));
+                        row++;
+                        break;
+                    }
+                    case 1:
+                    {
+                        value = value;
+                        //watts to joules
+                        fieldArray.get(row).setText(String.valueOf(value));
+                        row++;
+                        break;
+                    }
+                    case 2:
+                    {
+                        value = value * 0.2389;
+                        //joules to calories
+                        fieldArray.get(row).setText(String.valueOf(value));
+                        row++;
+                        break;
+                    }
+                    case 3:
+                    {
+                        value = value* 0.001;
+                        //calories to kCal
+                        fieldArray.get(row).setText(String.valueOf(value));
+                        row++;
+                        break;
+                    }
+                    case 4:
+                    {
+                        value = value * 0.0015596;
+                        //kCal to horsepower
+                        fieldArray.get(row).setText(String.valueOf(value));
+                        row++;
+                        break;
+                    }
+                    case 5:
+                    {
+                        value = value * 2544.43;
+                        //horsepower to btu
+                        fieldArray.get(row).setText(String.valueOf(value));
+                        row = 0; //wrap back around to 0
+                        break;
+                    }
+                    default: 
+                        System.out.println("You broke it!");
                 }
-                case 1:
-                {
-                    value = value;
-                    //watts to joules
-                    fieldArray.get(row).setText(String.valueOf(value));
-                    row++;
-                    break;
-                }
-                case 2:
-                {
-                    value = value * 0.2389;
-                    //joules to calories
-                    fieldArray.get(row).setText(String.valueOf(value));
-                    row++;
-                    break;
-                }
-                case 3:
-                {
-                    value = value* 0.001;
-                    //calories to kCal
-                    fieldArray.get(row).setText(String.valueOf(value));
-                    row++;
-                    break;
-                }
-                case 4:
-                {
-                    value = value * 0.0015596;
-                    //kCal to horsepower
-                    fieldArray.get(row).setText(String.valueOf(value));
-                    row++;
-                    break;
-                }
-                case 5:
-                {
-                    value = value * 2544.43;
-                    //horsepower to btu
-                    fieldArray.get(row).setText(String.valueOf(value));
-                    row = 0; //wrap back around to 0
-                    break;
-                }
-                default: 
-                    System.out.println("You broke it!");
-            }
-            
-            
-            
-        }while(stop != row); //stop when loop reaches original row
-        
+
+
+
+            }while(stop != row); //stop when loop reaches original row
+        }catch(Exception ex)
+        {
+            displayError("Invalid input!");
+            initialValues();
+        }
     }
 
+    //excecutes when enter key is pressed
     @Override
     public void actionPerformed(ActionEvent ae) {
+        //gets index of the source
         int row = fieldArray.indexOf(ae.getSource());
+        //gets the input from the source
         String entry = fieldArray.get(row).getText();
         
+        //passes input into calculation function
         calculateConv(entry, row);
+    }
+    
+    //sets up initial values for the textfields
+    public void initialValues()
+    {
+        fieldArray.get(0).setText("1");
+        calculateConv("1", 0);
+    }
+    
+    //will display a dialog box with the specified message
+    public void displayError(String msg)
+    {
+        JOptionPane.showMessageDialog(null, msg);
     }
     
 }
