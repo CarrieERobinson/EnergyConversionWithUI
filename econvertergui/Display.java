@@ -8,6 +8,8 @@ package econvertergui;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -20,7 +22,7 @@ import javax.swing.JTextField;
  *
  * @author Carrie
  */
-public class Display extends JFrame{
+public class Display extends JFrame implements KeyListener{
     
     
     public Display()
@@ -28,8 +30,8 @@ public class Display extends JFrame{
         runGUI();
     }
     
-    //arrayList to hold listeners
-    ArrayList<ActionListener> listenerArray = new ArrayList();
+    //instantiate an actionListener
+    
     //arrayList to hold the textfields
     ArrayList<JTextField> fieldArray = new ArrayList();
     //arrayList to hold the labels
@@ -47,34 +49,36 @@ public class Display extends JFrame{
         JComponent panel = new JPanel();
         
         
+        
+        
         //Text fields:
         //creates text fields, adds a listener, adds field to fieldArray
         JTextField wattField = new JTextField(10);
-        wattField.addActionListener(listenerArray.get(0));
         fieldArray.add(wattField);
         JTextField jouleField = new JTextField(10);
-        jouleField.addActionListener(listenerArray.get(1));
         fieldArray.add(jouleField);
         JTextField calorieField = new JTextField(10);
-        calorieField.addActionListener(listenerArray.get(2));
         fieldArray.add(calorieField);
         JTextField kCalField = new JTextField(10);
-        kCalField.addActionListener(listenerArray.get(3));
         fieldArray.add(kCalField);
         JTextField hpField = new JTextField(10);
-        hpField.addActionListener(listenerArray.get(4));
         fieldArray.add(hpField);
         JTextField btuField = new JTextField(10);
-        btuField.addActionListener(listenerArray.get(5));
         fieldArray.add(btuField);
+        
+        //Add action listeners to each field
+        for(int i = 0; i < fieldArray.size(); i++)
+        {
+            fieldArray.get(i).addKeyListener(this);
+        }
         
         //Labels for each text field
         JLabel wattLabel = new JLabel("Watts: ");
-        JLabel jouleLabel = new JLabel("Joules: ");
-        JLabel calorieLabel = new JLabel("Calories: ");
-        JLabel kCalLabel = new JLabel("kCals: ");
+        JLabel jouleLabel = new JLabel("Joules/s: ");
+        JLabel calorieLabel = new JLabel("Calorie/s: ");
+        JLabel kCalLabel = new JLabel("kCals/s: ");
         JLabel hpLabel = new JLabel("Horsepower: ");
-        JLabel btuLabel = new JLabel("British Thermal Units: ");
+        JLabel btuLabel = new JLabel("BTU/hr: ");
         
         //created grid layout to allign labels and text boxes
         GridLayout grid = new GridLayout(6, 2);
@@ -103,20 +107,112 @@ public class Display extends JFrame{
         
     }
     
-    public void keyPressed(ActionEvent event)
+    public void calculateConv(String entry, int row)
     {
-        int row = listenerArray.indexOf(event.getSource());
+        //update each text box in order to show conversions as user types
+        //explanation under class
+        int stop = row;
+        
+        //will keep track of what row the loop is on
+        row+=1;
+        
+        //will hold the value of previous equation
+        double value = Double.parseDouble(entry);
+        do
+        {
+            switch(row)
+            {
+                case 0:
+                {
+                    value = value * 0.29307107;
+                    //btu to watts
+                    fieldArray.get(row).setText(String.valueOf(value));
+                    row++;
+                    break;
+                }
+                case 1:
+                {
+                    value = value;
+                    //watts to joules
+                    fieldArray.get(row).setText(String.valueOf(value));
+                    row++;
+                    break;
+                }
+                case 2:
+                {
+                    value = value * 0.2388;
+                    //joules to calories
+                    fieldArray.get(row).setText(String.valueOf(value));
+                    row++;
+                    break;
+                }
+                case 3:
+                {
+                    value = value* 0.001;
+                    //calories to kCal
+                    fieldArray.get(row).setText(String.valueOf(value));
+                    row++;
+                    break;
+                }
+                case 4:
+                {
+                    value = value * 5.61083642;
+                    //kCal to horsepower
+                    fieldArray.get(row).setText(String.valueOf(value));
+                    row++;
+                    break;
+                }
+                case 5:
+                {
+                    value = value * 0.00039;
+                    //horsepower to btu
+                    fieldArray.get(row).setText(String.valueOf(value));
+                    row = 0; //wrap back around to 0
+                    break;
+                }
+                default: 
+                    System.out.println("You broke it!");
+            }
+            
+            
+            
+        }while(stop != row); //stop when loop reaches original row
+        
+    }
+
+    
+
+    @Override
+    public void keyTyped(KeyEvent ke) {
+        int row = fieldArray.indexOf(ke.getSource());
         String entry = fieldArray.get(row).getText();
         
         calculateConv(entry, row);
     }
-    
-    public void calculateConv(String entry, int row)
+
+    @Override
+    public void keyPressed(KeyEvent ke) 
     {
+        int row = fieldArray.indexOf(ke.getSource());
+        String entry = fieldArray.get(row).getText();
         
+        calculateConv(entry, row);    
+    }
+
+    @Override
+    public void keyReleased(KeyEvent ke) {
+        int row = fieldArray.indexOf(ke.getSource());
+        String entry = fieldArray.get(row).getText();
+        
+        calculateConv(entry, row);
     }
     
 }
 
 
 //Will use the row number to shorten checking what fields need updated info
+
+//The conversion function works by going through each field one-by-one
+//it will use the conversion equation for the previous textfield along with the
+//value of the previous field. This way, each field is updated based on the
+//previous field rather than looking at one field then going through each equation
